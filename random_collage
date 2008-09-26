@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'trollop'
+require File.dirname(__FILE__) + '/init'
+
+opts = Trollop::options do
+  opt :width,            "width",            :default => 1280
+  opt :height,           "height",           :default => 800
+  opt :image_ratio,      "image_ratio",      :default => '0.35'
+  opt :number_of_photos, "number_of_photos", :default => '25'
+  opt :angle,            "Max angle of photos, it's random from 0 to the angle", :default => 20
+  opt :background,       "background",       :default => 'black' # 'photo'
+  opt :layout,           "layout",           :default => 'collage'
+  opt :show_titles,      "show_titles",      :default => false
+  opt :input_dir,        "input_dir",        :default => '~/Pictures/family backgrounds'
+  opt :output_dir,       "output_dir",       :default => '~/Pictures/collages'
+  opt :collages_to_keep, "collages_to_keep", :default => 20 # 'all'
+end
+opts.delete(:help)
+
+
+float_range_options = [:image_ratio]
+float_range_options.each do |option|
+  opts[option] = Range.new(*opts[option].split('..').map { |i| i.to_f }) if opts[option] =~ /^0\.\d+..0\.\d+$/
+  if opts[option].is_a?(String)
+    Trollop::die option, "must be either a float or a range of floats (i.e. 0.3..0.4) between 1 and 0" unless opts[option] =~ /^0\.\d+$/
+    opts[option] = opts[option].to_f
+  end
+end
+
+integer_range_options = [:number_of_photos]
+integer_range_options.each do |option|
+  opts[option] = Range.new(*opts[option].split('..').map { |i| i.to_i }) if opts[option] =~ /^\d+..\d+$/
+  if opts[option].is_a?(String)
+    Trollop::die option, "must be either an integer or a range of integers (i.e. 20..30)" unless opts[option] =~ /^\d+$/
+    opts[option] = opts[option].to_i
+  end
+end
+
+rm = RandomCollage.new(opts)
+rm.write!

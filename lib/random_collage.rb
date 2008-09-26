@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'active_support'
+require 'RMagick'
+require 'pp'
+
+class RandomCollage
+  
+  VALID_KEYS = [
+    :width,
+    :height,
+    :image_ratio,
+    :number_of_photos,
+    :angle,
+    :background,
+    :layout,
+    :show_titles,
+    :input_dir,
+    :output_dir,
+    :collages_to_keep
+  ].freeze
+  
+  def initialize(options = {})
+    options.assert_valid_keys(VALID_KEYS)
+    @options = {}
+    options.each { |k,v| @options[k.to_sym] = v }
+    
+    @photos = RandomImageList.random_image_list(@options[:input_dir], @options[:number_of_photos])
+    @options[:number_of_photos] = @photos.size
+    @photos.each { |p| p[:Caption] = p.filename.scan(/.*?([^\.\/]+)\.\w+/).to_s.titleize } if @options[:show_titles]
+    
+    if @options[:background] == 'photo'
+      @photo_background = @photos.pop.crop_resized!(@options[:width], @options[:height], Magick::NorthGravity)
+      @options[:number_of_photos] -= 1
+      @options[:background] = 'none'
+    end
+
+    # background_color = 'none' for a blank PNG
+    color = @options[:background]
+    @background = Magick::Image.new(@options[:width], @options[:height]) { self.background_color = color; self.depth = 8 }
+  end
+  
+  def write!
+    final = layout.place_photos(@background, @photos)
+    final = @photo_background.composite(final, 0, 0, Magick::OverCompositeOp) if @photo_background
+    final.write(File.join(File.expand_path(@options[:output_dir]), "#{Time.now.strftime("%Y%m%d%H%M%S")}.png"))
+    remove_old_files
+  end
+  
+private
+  
+  def layout
+    @layout ||= @options[:layout].classify.constantize.new(@options)
+  end
+    
+  def remove_old_files
+    return if @options[:collages_to_keep] == 'all'
+    files = Dir.glob(File.expand_path(@options[:output_dir] + '/*')).sort.reverse[@options[:collages_to_keep].to_i..-1]
+    files.each { |file| File.delete(file) } if files
+  end
+
+end

@@ -1,0 +1,9 @@
+h1. Random Collage
+
+h2. Installing RMagick
+
+  sudo port install tiff -macosx
+  sudo port install ghostscript
+  sudo port install ImageMagick
+  sudo gem install rmagick
+
