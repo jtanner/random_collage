@@ -4,17 +4,17 @@ require 'trollop'
 require File.dirname(__FILE__) + '/init'
 
 opts = Trollop::options do
-  opt :width,            "width",            :default => 1280
-  opt :height,           "height",           :default => 800
-  opt :image_ratio,      "image_ratio",      :default => '0.35'
-  opt :number_of_photos, "number_of_photos", :default => '25'
-  opt :angle,            "Max angle of photos, it's random from 0 to the angle", :default => 20
-  opt :background,       "background",       :default => 'black' # 'photo'
-  opt :layout,           "layout",           :default => 'collage'
-  opt :show_titles,      "show_titles",      :default => false
-  opt :input_dir,        "input_dir",        :default => '~/Pictures/family backgrounds'
-  opt :output_dir,       "output_dir",       :default => '~/Pictures/collages'
-  opt :collages_to_keep, "collages_to_keep", :default => 20 # 'all'
+  opt :input_dir,        "Directory of images to use for the collage", :default => '~/Pictures/'
+  opt :output_dir,       "Where to store the resulting image", :default => '~/Pictures/collages'
+  opt :width,            "Width of resulting image",  :default => 1280
+  opt :height,           "Height of resulting image", :default => 800
+  opt :layout,           "collage, border, or mosaic", :default => 'collage'
+  opt :image_ratio,      "Size ratio of the collaged images compared to the width and height (a range will also work i.e. 0.3..0.4)", :default => '0.35'
+  opt :number_of_photos, "Number of photos to use from --input-dir (a range will also work i.e. 20..30)", :default => '25'
+  opt :angle,            "Max degree of angle, it's random from minus angle to angle (i.e. -20 to 20)", :default => 20
+  opt :background,       "Give a color name or 'photo' to use one of the photos.", :default => 'black'
+  opt :show_titles,      "Show titles on the polaroid border (uses a titleized version of the file name)", :default => false
+  opt :collages_to_keep, "Number of images to keep in the --output-dir (use 'all' to keep all files)", :default => 20
 end
 opts.delete(:help)
 

@@ -7,3 +7,7 @@ h2. Installing RMagick
   sudo port install ImageMagick
   sudo gem install rmagick
 
+h2. Other gem dependencies
+
+* trollop
+* active_support

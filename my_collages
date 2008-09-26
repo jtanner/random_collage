@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-/Users/jtanner/projects/random_collage/random_collage -b photo
-/Users/jtanner/projects/random_collage/random_collage -p '~/Pictures/treasure map' -b black -s
-/Users/jtanner/projects/random_collage/random_collage -b photo -l border -i 0.20 -a 16
-/Users/jtanner/projects/random_collage/random_collage -l mosaic -n 12
+/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -b photo
+/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -p '~/Pictures/treasure map' -b black -s
+/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -b photo -l border -i 0.20 -a 16
+/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -l mosaic -n 12
