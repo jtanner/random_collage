@@ -6,7 +6,7 @@ class Mosaic < Collage
     $geometry = "#{cell_width(:x)}x#{cell_width(:y)}+0+0"
     $tile = "#{grid.first}x#{grid.last}"
     puts "Mosaic of #{grid.first} x #{grid.last} with cell size of #{cell_width(:x)} x #{cell_width(:y)}"
-    photos.collage do
+    photos.montage do
       self.geometry = $geometry
       self.tile = $tile
       self.border_width = 2
