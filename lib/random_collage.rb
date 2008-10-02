@@ -43,7 +43,7 @@ class RandomCollage
   def write!
     final = layout.place_photos(@background, @photos)
     final = @photo_background.composite(final, 0, 0, Magick::OverCompositeOp) if @photo_background
-    final.write(File.join(File.expand_path(@options[:output_dir]), "#{Time.now.strftime("%Y%m%d%H%M%S")}.png"))
+    final.write(File.join(File.expand_path(@options[:output_dir]), "#{Time.now.strftime("%Y%m%d%H%M%S")}.jpg"))
     remove_old_files
   end
   
