@@ -26,6 +26,10 @@ class RandomCollage
     options.each { |k,v| @options[k.to_sym] = v }
     
     @photos = RandomImageList.random_image_list(@options[:input_dir], @options[:number_of_photos])
+    if @photos.empty?
+      puts "No photos were found in #{@options[:input_dir]}"
+      exit(1)
+    end
     @options[:number_of_photos] = @photos.size
     @photos.each { |p| p[:Caption] = p.filename.scan(/.*?([^\.\/]+)\.\w+/).to_s.titleize } if @options[:show_titles]
     
