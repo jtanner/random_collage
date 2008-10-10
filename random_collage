@@ -9,6 +9,7 @@ opts = Trollop::options do
   opt :width,            "Width of resulting image",  :default => 1280
   opt :height,           "Height of resulting image", :default => 800
   opt :layout,           "collage, border, or mosaic", :default => 'collage'
+  opt :using_iphoto,     "If --input-dir is an iPhoto Library then use this flag", :default => false
   opt :image_ratio,      "Size ratio of the collaged images compared to the width and height (a range will also work i.e. 0.3..0.4)", :default => '0.35', :short => 'r'
   opt :number_of_photos, "Number of photos to use from --input-dir (a range will also work i.e. 20..30)", :default => '25'
   opt :angle,            "Max degree of angle, it's random from minus angle to angle (i.e. -20 to 20)", :default => 20
