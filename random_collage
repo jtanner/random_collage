@@ -4,19 +4,29 @@ require 'trollop'
 require File.dirname(__FILE__) + '/init'
 
 opts = Trollop::options do
-  opt :input_dir,        "Directory of images to use for the collage", :default => '~/Pictures/'
+  banner <<-EOS
+Random Collage
+Usage:
+       random_collage [options]
+where [options] are:
+EOS
+  opt :input_dir,        "Directory of images to use for the collage", :type => :string
   opt :output_dir,       "Where to store the resulting image", :default => '~/Pictures/collages'
   opt :width,            "Width of resulting image",  :default => 1280
   opt :height,           "Height of resulting image", :default => 800
   opt :layout,           "collage, border, or mosaic", :default => 'collage'
-  opt :using_iphoto,     "If --input-dir is an iPhoto Library then use this flag", :default => false
   opt :image_ratio,      "Size ratio of the collaged images compared to the width and height (a range will also work i.e. 0.3..0.4)", :default => '0.35', :short => 'r'
   opt :number_of_photos, "Number of photos to use from --input-dir (a range will also work i.e. 20..30)", :default => '25'
   opt :angle,            "Max degree of angle, it's random from minus angle to angle (i.e. -20 to 20)", :default => 20
   opt :background,       "Give a color name or 'photo' to use one of the photos.", :default => 'black'
   opt :show_titles,      "Show titles on the polaroid border (uses a titleized version of the file name)", :default => false
   opt :collages_to_keep, "Number of images to keep in the --output-dir (use 'all' to keep all files)", :default => 20
+  banner "\niPhoto [options] are:"
+  opt :using_iphoto,     "To use an iPhoto Library then use this flag (if your library is in a non-standard location then --input_dir must be used)", :default => false
+  opt :from,             "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss'", :type => String
+  opt :to,               "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss'", :type => String
 end
+
 opts.delete(:help)
 
 

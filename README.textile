@@ -14,3 +14,4 @@ h2. Other gem dependencies
 
 * trollop
 * active_support
+* plist

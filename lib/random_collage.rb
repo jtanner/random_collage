@@ -14,11 +14,13 @@ class RandomCollage
     :angle,
     :background,
     :layout,
-    :using_iphoto,
     :show_titles,
     :input_dir,
     :output_dir,
-    :collages_to_keep
+    :collages_to_keep,
+    :using_iphoto,
+    :from,
+    :to
   ].freeze
   
   def initialize(options = {})
@@ -50,7 +52,7 @@ private
   
   def photos
     return @photos if @photos
-    @photos = image_list_class.random_image_list(@options[:input_dir], @options[:number_of_photos])
+    @photos = image_list_class.new(@options).random_image_list
     if @photos.empty?
       puts "No photos were found in #{@options[:input_dir]}"
       exit(1)
