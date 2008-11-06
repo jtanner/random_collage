@@ -7,10 +7,16 @@ class IphotoImageList < RandomImageList
   end
   
   def image_paths
-    from = parse_date_or_time(@options[:from])
-    to   = parse_date_or_time(@options[:to])
-    
-    iphoto.library.images.map do |image|
+    images = images_for_albums(@options[:albums] || [])
+    images_for_range(images, parse_date_or_time(@options[:from]), parse_date_or_time(@options[:to]))
+  end
+  
+  def images_for_albums(albums = [])
+    albums.empty? ? iphoto.library.images : iphoto.albums.select { |a| albums.include?(a.name) }.map { |a| a.images }.flatten
+  end
+  
+  def images_for_range(iphoto_images, from, to)
+    iphoto_images.map do |image|
       qualified = false
       qualified = image.path =~ /(jpg|jpeg|gif|png)$/i
       if from && to

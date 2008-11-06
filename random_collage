@@ -23,8 +23,9 @@ EOS
   opt :collages_to_keep, "Number of images to keep in the --output-dir (use 'all' to keep all files)", :default => 20
   banner "\niPhoto [options] are:"
   opt :using_iphoto,     "To use an iPhoto Library then use this flag (if your library is in a non-standard location then --input_dir must be used)", :default => false
-  opt :from,             "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss'", :type => String
-  opt :to,               "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss'", :type => String
+  opt :from,             "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss' can be used without --to", :type => String
+  opt :to,               "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss' can be used without --from", :type => String
+  opt :albums,           "A name or list of names of albums to use (e.g. 'album 1','album 2')", :type => String, :multi => true
 end
 
 opts.delete(:help)

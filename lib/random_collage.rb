@@ -20,7 +20,8 @@ class RandomCollage
     :collages_to_keep,
     :using_iphoto,
     :from,
-    :to
+    :to,
+    :albums
   ].freeze
   
   def initialize(options = {})
