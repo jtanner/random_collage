@@ -51,5 +51,11 @@ integer_range_options.each do |option|
   end
 end
 
+list_options = [:albums, :events, :keywords]
+list_options.each do |option|
+  opts[option] = opts[option].split(/,/) if opts[option]
+end
+
+
 rm = RandomCollage.new(opts)
 rm.write!
