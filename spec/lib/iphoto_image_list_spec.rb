@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe IphotoImageList do
   
   before(:each) do
-    @list = IphotoImageList.new
+    @list = IphotoImageList.new(:input_dir => File.dirname(__FILE__))
   end
   
   it "should parse image paths from the iPhoto AlbumData.xml" do
@@ -24,8 +24,16 @@ describe IphotoImageList do
     @list.image_paths.should have(2).paths
   end
   
-  it "should filter by event" do
-    pending
+  it "should filter by events" do
+    @list.options[:events] = ['Dec 25, 2007']
+    @list.image_paths.should have(1).path
+  end
+  
+  it "should filter by keywords" do
+    @list.options[:keywords] = ['Nature']
+    @list.image_paths.should have(2).paths
+    @list.options[:keywords] = ['Christmas']
+    @list.image_paths.should have(1).path
   end
   
 end

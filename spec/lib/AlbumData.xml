@@ -2,7 +2,7 @@
 <plist version="1.0">
 <dict>
 <key>Application Version</key>
-<string>7.1.4 (371)</string>
+<string>7.1.5 (378)</string>
 <key>Archive Path</key>
 <string>/Users/jtanner/Pictures/iPhoto Library</string>
 	<key>ArchiveId</key>
@@ -176,8 +176,46 @@
 </array>
 <key>Album Type</key>
 <string>Regular</string>
+<key>GUID</key>
+<string>BF6AD338-7E42-482A-8B7E-AD865C0E8BCB</string>
 <key>PhotoCount</key>
 <integer>2</integer>
+<key>PlayMusic</key>
+<string>YES</string>
+<key>RepeatSlideShow</key>
+<string>YES</string>
+<key>SecondsPerSlide</key>
+<integer>3</integer>
+<key>SlideShowUseTitles</key>
+<false/>
+<key>SongPath</key>
+<string>/Applications/iPhoto.app/Contents/Resources/Music/Minuet in G.mp3</string>
+<key>TransitionDirection</key>
+<integer>0</integer>
+<key>TransitionName</key>
+<string>Dissolve</string>
+<key>TransitionSpeed</key>
+<real>1.000000</real>
+<key>PanAndZoom</key>
+<string>YES</string>
+<key>ShuffleSlides</key>
+<false/>
+</dict>
+<dict>
+<key>AlbumId</key>
+<integer>10</integer>
+<key>AlbumName</key>
+<string>album 2</string>
+<key>KeyList</key>
+<array>
+<string>4</string>
+</array>
+<key>Album Type</key>
+<string>Regular</string>
+<key>GUID</key>
+<string>5E367DC5-776F-42D2-AD16-E223969F1F23</string>
+<key>PhotoCount</key>
+<integer>1</integer>
 <key>PlayMusic</key>
 <string>YES</string>
 <key>RepeatSlideShow</key>
@@ -258,12 +296,16 @@
 <string>_Favorite_</string>
 <key>7</key>
 <string>Birthday</string>
+<key>8</key>
+<string>Christmas</string>
 <key>4</key>
 <string>Family</string>
 <key>3</key>
 <string>Favorite</string>
 <key>5</key>
 <string>Kids</string>
+<key>9</key>
+<string>Nature</string>
 <key>6</key>
 <string>Vacation</string>
 </dict>
@@ -292,11 +334,15 @@
 <key>ModDateAsTimerInterval</key>
 <real>238351161.000000</real>
 <key>MetaModDateAsTimerInterval</key>
-<real>0.000000</real>
+<real>247811316.201754</real>
 <key>ImagePath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Originals/2007/Dec 25, 2007/family at Christmas.jpg</string>
 <key>ThumbPath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Data/2007/Dec 25, 2007/family at Christmas.jpg</string>
+<key>Keywords</key>
+<array>
+<string>8</string>
+</array>
 </dict>
 <key>4</key>
 <dict>
@@ -319,11 +365,15 @@
 <key>ModDateAsTimerInterval</key>
 <real>242442299.000000</real>
 <key>MetaModDateAsTimerInterval</key>
-<real>0.000000</real>
+<real>247811324.871648</real>
 <key>ImagePath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Originals/2008/Jan 2, 2008/P1021569.jpg</string>
 <key>ThumbPath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Data/2008/Jan 2, 2008/P1021569.jpg</string>
+<key>Keywords</key>
+<array>
+<string>9</string>
+</array>
 </dict>
 <key>6</key>
 <dict>
@@ -373,11 +423,15 @@
 <key>ModDateAsTimerInterval</key>
 <real>231967452.000000</real>
 <key>MetaModDateAsTimerInterval</key>
-<real>0.000000</real>
+<real>247811321.742658</real>
 <key>ImagePath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Originals/2008/May 8, 2008/volcanoUPI_800x531.jpg</string>
 <key>ThumbPath</key>
 <string>/Users/jtanner/Pictures/iPhoto Library/Data/2008/May 8, 2008/volcanoUPI_800x531.jpg</string>
+<key>Keywords</key>
+<array>
+<string>9</string>
+</array>
 </dict>
 </dict>
 <key>Minor Version</key>

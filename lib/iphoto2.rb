@@ -11,8 +11,8 @@ class IPhoto2
     @library ||= Album.new( @plist["List of Albums"].find { |a| a["Master"] }, self )
   end
 
-  def last_roll
-    @last_roll ||= Album.new( @plist["List of Albums"].find { |a| a["AlbumName"] == "Last Roll" }, self )
+  def last_import
+    @last_import ||= Album.new( @plist["List of Albums"].find { |a| a["AlbumName"] == "Last Import" }, self )
   end
 
   def last_month
@@ -22,6 +22,7 @@ class IPhoto2
   def rolls
     @rolls ||= @plist["List of Rolls"].collect { |roll| Album.new(roll, self) }
   end
+  alias_method :events, :rolls
 
   def albums
     @albums ||= @plist["List of Albums"].find_all do |a|
@@ -29,6 +30,15 @@ class IPhoto2
                 end.collect do |a|
                   Album.new( a, self )
                 end
+  end
+  
+  def keywords
+    @keywords ||= @plist["List of Keywords"]
+    @keywords.values
+  end
+  
+  def get_keyword(id)
+    keywords && @keywords[id]
   end
 
   def get_image( image_id )
@@ -51,11 +61,11 @@ class Album
   end
 
   def album_id
-    @plist["AlbumId"]
+    @plist["AlbumId"] || @plist["RollID"]
   end
 
   def name
-    @plist["AlbumName"]
+    @plist["AlbumName"] || @plist["RollName"]
   end
 
   def images
@@ -101,6 +111,10 @@ class Image
 
   def comment
     @plist["Comment"]
+  end
+  
+  def keywords
+    (@plist["Keywords"] || []).map { |keyword_id| @iphoto.get_keyword(keyword_id) }
   end
 
   def created_at

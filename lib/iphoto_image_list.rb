@@ -7,16 +7,24 @@ class IphotoImageList < RandomImageList
   end
   
   def image_paths
-    images = images_for_albums(@options[:albums] || [])
-    images_for_range(images, parse_date_or_time(@options[:from]), parse_date_or_time(@options[:to]))
+    images = images_for(:albums, @options[:albums]) | images_for(:events, @options[:events])
+    images = iphoto.library.images if images.empty?
+    images = filter_by_keywords(images, @options[:keywords]) if @options[:keywords]
+    images = filter_by_date_range(images, parse_date_or_time(@options[:from]), parse_date_or_time(@options[:to]))
+    images.map { |i| i.path }
   end
   
-  def images_for_albums(albums = [])
-    albums.empty? ? iphoto.library.images : iphoto.albums.select { |a| albums.include?(a.name) }.map { |a| a.images }.flatten
+  # albums, events, rolls
+  def images_for(method, names = nil)
+    names ? iphoto.send(method).select { |a| names.include?(a.name) }.map { |a| a.images }.flatten : []
   end
   
-  def images_for_range(iphoto_images, from, to)
-    iphoto_images.map do |image|
+  def filter_by_keywords(iphoto_images, keywords)
+    iphoto_images.reject { |i| (i.keywords & keywords).empty? }
+  end
+  
+  def filter_by_date_range(iphoto_images, from, to)
+    iphoto_images.select do |image|
       qualified = false
       qualified = image.path =~ /(jpg|jpeg|gif|png)$/i
       if from && to
@@ -26,8 +34,8 @@ class IphotoImageList < RandomImageList
       elsif to
         qualified = image.created_at <= to
       end
-      image.path if qualified
-    end.compact
+      qualified
+    end
   end
   
 private
