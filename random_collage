@@ -25,7 +25,9 @@ EOS
   opt :using_iphoto,     "To use an iPhoto Library then use this flag (if your library is in a non-standard location then --input_dir must be used)", :default => false
   opt :from,             "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss' can be used without --to", :type => String
   opt :to,               "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss' can be used without --from", :type => String
-  opt :albums,           "A name or list of names of albums to use (e.g. 'album 1','album 2'). Also, the default iPhoto albums 'Last 12 Months', 'Last Import', and 'Flagged' may be used", :type => String, :multi => true
+  opt :albums,           "A name or list of names of albums (e.g. 'album 1','album 2'). Also, the default iPhoto albums 'Last 12 Months', 'Last Import', and 'Flagged' may be used", :type => String, :multi => true
+  opt :events,           "A name or list of names of events", :type => String, :multi => true
+  opt :keywords,         "A name or list of keywords", :type => String, :multi => true
 end
 
 opts.delete(:help)

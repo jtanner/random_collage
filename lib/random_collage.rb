@@ -21,7 +21,9 @@ class RandomCollage
     :using_iphoto,
     :from,
     :to,
-    :albums
+    :albums,
+    :events,
+    :keywords
   ].freeze
   
   def initialize(options = {})
