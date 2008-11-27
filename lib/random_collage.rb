@@ -68,7 +68,7 @@ private
   def photo_background
     return @photo_background if @photo_background
     if @options[:background] == 'photo'
-      @photo_background = photos.pop.crop_resized!(@options[:width], @options[:height], Magick::NorthGravity)
+      @photo_background = photos.pop.crop_resized!(@options[:width], @options[:height]) #, Magick::NorthGravity)
       @options[:number_of_photos] -= 1
       @options[:background] = 'none'
     end
