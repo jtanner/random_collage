@@ -38,6 +38,7 @@ class RmagickProcessor
   def composite(other_image, x, y)
     other_image = other_image.image if respond_to?(:image)
     @image.composite!(other_image, Magick::NorthWestGravity, x, y, Magick::OverCompositeOp)
+    self
   end
   
   def resize(width, height)

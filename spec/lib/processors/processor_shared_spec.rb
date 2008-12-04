@@ -42,7 +42,8 @@ describe 'an image processor', :shared => true do
   end
   
   it "should composite another image" do
-    lambda { @processor.composite(@ruby_image, 200, 300) }.should_not raise_error
+    img = @processor.composite(@ruby_image, 200, 300)
+    img.width.should == 1024
   end
   
   it "should resize" do
