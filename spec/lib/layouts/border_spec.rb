@@ -18,7 +18,7 @@ describe Border do
   
   it "should only give random_positions around the edge of the grid" do
     positions = []
-    24.times do
+    28.times do
       x,y = @g.position(@photo)
       positions << [x,y]
       x.should_not be_nil

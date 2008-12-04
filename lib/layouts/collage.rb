@@ -18,7 +18,7 @@ class Collage
     shrunken_photo = photo.shrink(*geometry_for(photo))
     x,y = position(shrunken_photo)
     puts format("Placing photo @ %5s x %-5s", x, y)
-    background.composite(polaroid(shrunken_photo, random_angle), x, y)
+    background.composite(shrunken_photo.polaroid(random_angle), x, y)
   end
   
   def geometry_for(photo)
@@ -32,13 +32,6 @@ class Collage
     
   def image_ratio
     @image_ratio.is_a?(Range) ? float_range_rand(@image_ratio.first, @image_ratio.last) : @image_ratio
-  end
-  
-  def polaroid(img, angle)
-    img.polaroid(angle) do
-      self.shadow_color = "darkslategray"
-      self.pointsize = 12
-    end
   end
   
   def grid
