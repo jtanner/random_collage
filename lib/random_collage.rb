@@ -1,41 +1,41 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'active_support'
-require 'RMagick'
 require 'pp'
 
 class RandomCollage
   
-  VALID_KEYS = [
-    :width,
-    :height,
-    :image_ratio,
-    :number_of_photos,
-    :angle,
-    :background,
-    :layout,
-    :show_titles,
-    :input_dir,
-    :output_dir,
-    :collages_to_keep,
-    :using_iphoto,
-    :from,
-    :to,
-    :albums,
-    :events,
-    :keywords
-  ].freeze
+  DEFAULTS = {
+    :width            => 1680,
+    :height           => 1050,
+    :image_ratio      => 0.35,
+    :number_of_photos => 25,
+    :angle            => 15,
+    :background       => 'black',
+    :layout           => 'collage',
+    :show_titles      => false,
+    :input_dir        => nil,
+    :output_dir       => '~/Pictures/collages',
+    :collages_to_keep => 20,
+    :using_iphoto     => false,
+    :from             => nil,
+    :to               => nil,
+    :albums           => nil,
+    :events           => nil,
+    :keywords         => nil
+  }.freeze
   
   def initialize(options = {})
-    options.assert_valid_keys(VALID_KEYS)
     @options = {}
-    options.each { |k,v| @options[k.to_sym] = v }
+    DEFAULTS.each { |k,v| @options[k] = options[k] || v }
+    
+    @options[:processor] = RmagickProcessor
   end
   
-  def write!
+  def save
     final = layout.place_photos(background, photos)
-    final = photo_background.composite(final, 0, 0, Magick::OverCompositeOp) if photo_background
-    final.write(File.join(File.expand_path(@options[:output_dir]), "#{Time.now.strftime("%Y%m%d%H%M%S")}.jpg"))
+    final = photo_background.composite(final, 0, 0) if photo_background
+    final.save(File.join(File.expand_path(@options[:output_dir]), "#{Time.now.strftime("%Y%m%d%H%M%S")}.jpg"))
     remove_old_files
   end
   
@@ -68,7 +68,7 @@ private
   def photo_background
     return @photo_background if @photo_background
     if @options[:background] == 'photo'
-      @photo_background = photos.pop.crop_resized!(@options[:width], @options[:height]) #, Magick::NorthGravity)
+      @photo_background = photos.pop.resize(@options[:width], @options[:height])
       @options[:number_of_photos] -= 1
       @options[:background] = 'none'
     end
@@ -79,8 +79,8 @@ private
   def background
     return @background if @background
     photo_background # modifies the background option
-    color = @options[:background]
-    @background = Magick::Image.new(@options[:width], @options[:height]) { self.background_color = color; self.depth = 8 }
+    @background = @options[:processor].new(:color => @options[:background], :width => @options[:width], :height => @options[:height])
+    @background.resize(@options[:width], @options[:height])
   end
   
   def remove_old_files

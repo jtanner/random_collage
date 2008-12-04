@@ -1,39 +1,36 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require File.dirname(__FILE__) + '/layout_shared_spec'
 
-describe Mosaic do
+describe Montage do
   
   before(:each) do
-    @g = Mosaic.new(
+    @g = Montage.new(
       :width            => 200,
       :height           => 200,
       :angle            => 20,
-      :number_of_photos => 1,
+      :number_of_photos => 5,
       :image_ratio      => 0.30
     )
-    @photo = Magick::Image.new(125,100)
+    @photo = RmagickProcessor.new(:width => 125, :height => 100)
   end
   
-  it "should place photos" do
-    list = Magick::ImageList.new
-    list << @photo
-    lambda { @g.place_photos(Magick::Image.new(200,200), list) }.should_not raise_error
-  end
+  it_should_behave_like 'a layout'
 
   it "should generate a grid close to the aspect ratio and number of photos" do
     # [[1920,1000], [1600,1064], [1280,1024], [1280,800], [800,600]].each do |width,height|
     [[1280,800]].each do |width,height|
       30.downto(5) do |i|
-        grid = Mosaic.new(:width => width, :height => height, :number_of_photos => i).grid
+        factor_pair = Montage.new(:width => width, :height => height, :number_of_photos => i).factor_pair
         width_height_ratio = width / height.to_f
-        ratio_diff_percent = (width_height_ratio - (grid[0] / grid[1].to_f)) / width_height_ratio
+        ratio_diff_percent = (width_height_ratio - (factor_pair[0] / factor_pair[1].to_f)) / width_height_ratio
         ratio_diff_percent.should_not > 0.5
-        i.should >= grid[0] * grid[1]
+        i.should >= factor_pair[0] * factor_pair[1]
       end
     end
   end
   
   it "should find possible factors" do
-    m = Mosaic.new({})
+    m = Montage.new({})
     m.possible_factors(1).should == [[1, 1]]
     m.possible_factors(15).should == [[15, 1], [5, 3], [3, 5], [1, 15]]
     m.possible_factors(16).should == [[16, 1], [8, 2], [4, 4], [2, 8], [1, 16]]

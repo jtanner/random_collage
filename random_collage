@@ -14,10 +14,10 @@ EOS
   opt :output_dir,       "Where to store the resulting image", :default => '~/Pictures/collages'
   opt :width,            "Width of resulting image",  :default => 1680
   opt :height,           "Height of resulting image", :default => 1050
-  opt :layout,           "collage, border, or mosaic", :default => 'collage'
+  opt :layout,           "collage, border, or montage", :default => 'collage'
   opt :image_ratio,      "Size ratio of the collaged images compared to the width and height (a range will also work i.e. 0.3..0.4)", :default => '0.35', :short => 'r'
   opt :number_of_photos, "Number of photos to use from --input-dir (a range will also work i.e. 20..30)", :default => '25'
-  opt :angle,            "Max degree of angle, it's random from minus angle to angle (i.e. -20 to 20)", :default => 20
+  opt :angle,            "Max degree of angle, it's random from minus angle to angle (i.e. -20 to 20)", :default => 15
   opt :background,       "Give a color name or 'photo' to use one of the photos.", :default => 'black'
   opt :show_titles,      "Show titles on the polaroid border (uses a titleized version of the file name)", :default => false
   opt :collages_to_keep, "Number of images to keep in the --output-dir (use 'all' to keep all files)", :default => 20
@@ -57,5 +57,4 @@ list_options.each do |option|
 end
 
 
-rm = RandomCollage.new(opts)
-rm.write!
+RandomCollage.new(opts).save

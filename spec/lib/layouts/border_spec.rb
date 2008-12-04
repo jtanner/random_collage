@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require File.dirname(__FILE__) + '/layout_shared_spec'
 
 describe Border do
   
@@ -10,14 +11,10 @@ describe Border do
       :number_of_photos => 30,
       :image_ratio      => 0.30
     )
-    @photo = Magick::Image.new(125,100)
+    @photo = RmagickProcessor.new(:width => 125, :height => 100)
   end
   
-  it "should place photos" do
-    list = Magick::ImageList.new
-    list << @photo
-    lambda { @g.place_photos(Magick::Image.new(200,200), list) }.should_not raise_error
-  end
+  it_should_behave_like 'a layout'
   
   it "should only give random_positions around the edge of the grid" do
     positions = []

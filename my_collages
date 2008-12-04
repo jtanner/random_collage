@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 /Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/treasure map' -s
 /Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -b photo -l border -r 0.20 -a 16
-/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -l mosaic -n 12
+/Users/jtanner/projects/random_collage/random_collage -i '~/Pictures/family backgrounds' -l montage -n 12
 /Users/jtanner/projects/random_collage/random_collage --using-iphoto -b photo

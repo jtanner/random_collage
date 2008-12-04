@@ -7,12 +7,10 @@ class RandomImageList
   end
   
   def random_image_list
-    list = Magick::ImageList.new
     count = @options[:number_of_photos]
     count = range_rand(count.first, count.last) if count.is_a?(Range)
     @options[:number_of_photos] = count
-    random(count).each { |image_path| list.read(image_path) }
-    list
+    random(count).map { |image_path| @options[:processor].new(:path => File.expand_path(image_path)) }
   end
   
 protected

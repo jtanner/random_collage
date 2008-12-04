@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require File.dirname(__FILE__) + '/layout_shared_spec'
 
 describe Collage do
   
@@ -10,24 +11,20 @@ describe Collage do
       :number_of_photos => 1,
       :image_ratio      => 0.3
     )
-    @photo = Magick::Image.new(125,100)
+    @photo = RmagickProcessor.new(:width => 125, :height => 100)
   end
   
-  it "should place photos" do
-    list = Magick::ImageList.new
-    list << @photo
-    lambda { @g.place_photos(Magick::Image.new(200,200), list) }.should_not raise_error
-  end
+  it_should_behave_like 'a layout'
   
   it "should flip flop new_geometry based on the layout of the photo" do
     @g.width = 1280
     @g.height = 800
     @g.stub!(:image_ratio).and_return(0.3)
-    vertical = Magick::Image.new(100,125)
-    square   = Magick::Image.new(100,100)
-    @g.geometry_for(@photo).should   == "384x240"
-    @g.geometry_for(vertical).should == "240x384"
-    @g.geometry_for(square).should   == "240x384"
+    vertical = RmagickProcessor.new(:width => 100, :height => 125)
+    square   = RmagickProcessor.new(:width => 100, :height => 100)
+    @g.geometry_for(@photo).should   == [384, 240]
+    @g.geometry_for(vertical).should == [240, 384]
+    @g.geometry_for(square).should   == [240, 384]
   end
   
   it "should only give random_positions within the width and height" do
@@ -53,7 +50,7 @@ describe Collage do
       (0..100).should include(y)
     end
     # large photo
-    photo = Magick::Image.new(300,250)
+    photo = RmagickProcessor.new(:width => 300, :height => 250)
     10.times do
       x,y = @g.position(photo)
       (-100..0).should include(x)

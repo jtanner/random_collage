@@ -15,23 +15,18 @@ class Collage
   end
   
   def place(background, photo)
-    new_geometry = geometry_for(photo)
-    shrunken_photo = shrink(photo, new_geometry)
+    shrunken_photo = photo.shrink(*geometry_for(photo))
     x,y = position(shrunken_photo)
     puts format("Placing photo @ %5s x %-5s", x, y)
-    background.composite!(polaroid(shrunken_photo, random_angle), Magick::NorthWestGravity, x, y, Magick::OverCompositeOp)
-  end
-  
-  def shrink(img, new_geometry)
-    img.change_geometry(new_geometry) { |cols, rows, img| img.resize!(cols, rows) }
+    background.composite(polaroid(shrunken_photo, random_angle), x, y)
   end
   
   def geometry_for(photo)
     ratio = image_ratio
-    if photo.columns - photo.rows > 0
-      "#{(@width * ratio).to_i}x#{(@height * ratio).to_i}"
+    if photo.width - photo.height > 0
+      [(@width * ratio).to_i, (@height * ratio).to_i]
     else
-      "#{(@height * ratio).to_i}x#{(@width * ratio).to_i}"
+      [(@height * ratio).to_i, (@width * ratio).to_i]
     end
   end
     
@@ -103,8 +98,8 @@ class Collage
   # 
   def offset_position(photo, position)
     x,y = position
-    possible_x = cell_width(:x) - photo.columns
-    possible_y = cell_width(:y) - photo.rows
+    possible_x = cell_width(:x) - photo.width
+    possible_y = cell_width(:y) - photo.height
     new_x = x + rand(possible_x.abs + 1) * (possible_x < 0 ? -1 : 1)
     new_y = y + rand(possible_y.abs + 1) * (possible_y < 0 ? -1 : 1)
     [new_x.to_i, new_y.to_i]

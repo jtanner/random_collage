@@ -6,13 +6,13 @@ class Border < Collage
     x,y = random_position
     case closest_to(x,y)
     when :top
-      y = 0 - (photo.rows / 5)
+      y = 0 - (photo.height / 5)
     when :bottom
-      y = @height - photo.rows - 15 # for polaroid border
+      y = @height - photo.height - 15 # for polaroid border
     when :left
-      x = 0 - (photo.columns / 5)
+      x = 0 - (photo.width / 5)
     when :right
-      x = @width - photo.columns - 15 # for polaroid border
+      x = @width - photo.width - 15 # for polaroid border
     end
     [x.to_i,y.to_i]
   end
