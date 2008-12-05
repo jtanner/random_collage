@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/random_image_list'
-
 class IphotoImageList < RandomImageList
   
   def iphoto

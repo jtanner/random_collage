@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/collage'
-
 class Border < Collage
   
   def place_photos(background, photos)

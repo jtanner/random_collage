@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/collage'
-
 class Montage < Collage
   def old_place_photos(background, photos)
     photos.each { |photo| photo.resize(cell_width(:x), cell_width(:y)) }

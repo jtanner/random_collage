@@ -1,7 +1,4 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'active_support'
-require 'pp'
 
 class RandomCollage
   
