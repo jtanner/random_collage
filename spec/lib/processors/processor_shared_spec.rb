@@ -7,8 +7,18 @@ end
 #   @processer:  An instance of the image at ruby_image_path()
 describe 'an image processor', :shared => true do
   
-  [
-    
+  %w[
+    image
+    color
+    width
+    height
+    save
+    composite
+    resize
+    shrink
+    polaroid
+    caption
+    filename
   ].each do |required_method|
     it "should have the #{required_method} method" do
       @processor.should respond_to(required_method)
@@ -78,5 +88,10 @@ describe 'an image processor', :shared => true do
   end
   
   it "should add a border"
+  
+  it "should add a caption" do
+    @ruby_image.caption = "Ruby!"
+    @ruby_image.caption.should == "Ruby!"
+  end
   
 end

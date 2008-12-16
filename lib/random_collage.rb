@@ -61,7 +61,7 @@ private
       exit(1)
     end
     @options[:number_of_photos] = @photos.size
-    @photos.each { |p| p[:Caption] = p.filename.scan(/.*?([^\.\/]+)\.\w+/).to_s.titleize } if @options[:show_titles]
+    @photos.each { |p| p.caption = p.filename.scan(/.*?([^\.\/]+)\.\w+/).to_s.titleize } if @options[:show_titles]
     @photos
   end
   

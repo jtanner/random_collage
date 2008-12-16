@@ -13,4 +13,9 @@ describe RandomCollage do
     pictures.should have(1).picture
   end
   
+  it "should assign a caption" do
+    photos = RandomCollage.new(@options.merge(:show_titles => true)).send(:photos)
+    photos.first.caption.should == "Ruby"
+  end
+  
 end
