@@ -60,4 +60,16 @@ class RmagickProcessor
     self
   end
   
+  def filename
+    @image.filename
+  end
+  
+  def caption=(text)
+    @image[:Caption] = text
+  end
+  
+  def caption
+    @image[:Caption]
+  end
+  
 end
