@@ -14,8 +14,8 @@ describe 'an image processor', :shared => true do
     height
     save
     composite
-    resize
-    shrink
+    crop_to_fit
+    scale_to_fit
     polaroid
     caption
     filename
@@ -56,14 +56,14 @@ describe 'an image processor', :shared => true do
     img.width.should == 1024
   end
   
-  it "should resize" do
-    img = @processor.resize(300,200)
+  it "should crop_to_fit" do
+    img = @processor.crop_to_fit(300,200)
     img.width.should  == 300
     img.height.should == 200
   end
   
-  it "should shrink" do
-    img = @processor.shrink(300,200)
+  it "should scale_to_fit" do
+    img = @processor.scale_to_fit(300,200)
     img.width.should  == 267
     img.height.should == 200
   end
@@ -77,7 +77,7 @@ describe 'an image processor', :shared => true do
     img.height.should > height
   end
   
-  it "should save to disk" do
+  it "should save (a red square) to disk" do
     test_path = spec_dir + '/test.jpg'
     FileUtils.rm_f(test_path)
     img = @processor.class.new(:width => 50, :height => 50, :color => 'red')
@@ -85,6 +85,17 @@ describe 'an image processor', :shared => true do
     saved = @processor.class.new(:path => test_path)
     saved.width.should  == img.width
     saved.height.should == img.height
+  end
+  
+  it "should save a resized ruby.jpg to disk" do
+    test_path = spec_dir + '/test.jpg'
+    FileUtils.rm_f(test_path)
+    img = @processor.class.new(:path => ruby_image_path)
+    img.crop_to_fit(75, 50)
+    img.save(test_path)
+    saved = @processor.class.new(:path => test_path)
+    saved.width.should  == 75
+    saved.height.should == 50
   end
   
   it "should add a border"

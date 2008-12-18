@@ -4,7 +4,7 @@ describe RandomCollage do
   
   before(:each) do
     @options = {:input_dir => spec_dir, :output_dir => spec_dir, :width => 300, :height => 300, :number_of_photos => 1}
-    FileUtils.rm_f(Dir.glob("#{spec_dir}/#{Time.now.strftime("%Y%m%d%H")}*.jpg") << "#{spec_dir}/test.jpg")
+    FileUtils.rm_f(Dir.glob("#{spec_dir}/[0-9]*.jpg") << "#{spec_dir}/test.jpg")
   end
   
   it "should save a file" do

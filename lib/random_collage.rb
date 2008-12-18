@@ -65,7 +65,7 @@ private
   def photo_background
     return @photo_background if @photo_background
     if @options[:background] == 'photo'
-      @photo_background = photos.pop.resize(@options[:width], @options[:height])
+      @photo_background = photos.pop.crop_to_fit(@options[:width], @options[:height])
       @options[:number_of_photos] -= 1
       @options[:background] = 'none'
     end
@@ -77,7 +77,7 @@ private
     return @background if @background
     photo_background # modifies the background option
     @background = @options[:processor].new(:color => @options[:background], :width => @options[:width], :height => @options[:height])
-    @background.resize(@options[:width], @options[:height])
+    @background.crop_to_fit(@options[:width], @options[:height])
   end
   
   def remove_old_files

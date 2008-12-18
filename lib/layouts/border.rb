@@ -6,7 +6,7 @@ class Border < Collage
     x, y = geometry_for(background_photo)
     x = x - (x / 4)
     y = y - (y / 4)
-    background_photo.resize(width - (x * 2), height - (y * 2))
+    background_photo.crop_to_fit(width - (x * 2), height - (y * 2))
     background.composite(background_photo, x, y) # TODO put a border around background_photo (match polaroid border width)
     photos.each { |photo| place(background, photo) }
     background

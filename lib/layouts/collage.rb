@@ -15,10 +15,10 @@ class Collage
   end
   
   def place(background, photo)
-    shrunken_photo = photo.shrink(*geometry_for(photo))
-    x,y = position(shrunken_photo)
+    scaled_photo = photo.scale_to_fit(*geometry_for(photo))
+    x,y = position(scaled_photo)
     puts format("Placing photo @ %5s x %-5s", x, y)
-    background.composite(shrunken_photo.polaroid(random_angle), x, y)
+    background.composite(scaled_photo.polaroid(random_angle), x, y)
   end
   
   def geometry_for(photo)

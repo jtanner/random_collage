@@ -1,26 +1,6 @@
 require 'RMagick'
 
-class RmagickProcessor
-  
-  def initialize(options = {})
-    @path   = options[:path]
-    @width  = options[:width]
-    @height = options[:height]
-    @color  = color = options[:color]
-    
-    @image = if @path
-      Magick::Image.read(File.expand_path(@path)).first
-    elsif @width && @height
-      Magick::Image.new(@width, @height) do
-        self.depth = 8
-        self.background_color = color if color
-      end
-    else
-      raise ArgumentError, "Expected either a path or a width and height"
-    end
-  end
-  
-  attr_reader :image, :color
+class RmagickProcessor < ImageProcessor
   
   def width
     @image.columns
@@ -33,21 +13,23 @@ class RmagickProcessor
   def save(path, type = :jpg)
     path = "#{path}.#{type}" unless path =~ /\.\w+$/
     @image.write(path)
+    self
   end
   
   def composite(other_image, x, y)
-    other_image = other_image.image if respond_to?(:image)
+    other_image = other_image.image if other_image.is_a?(ImageProcessor)
     @image.composite!(other_image, Magick::NorthWestGravity, x, y, Magick::OverCompositeOp)
     self
   end
   
-  def resize(width, height)
-    @image.crop_resized!(width, height) #, Magick::NorthGravity)
+  # crop resize
+  def crop_to_fit(width, height)
+    @image.crop_resized!(width, height, Magick::NorthGravity)
     self
   end
   
   # resizes to the bounds of width and height, but keeps the same aspect ratio
-  def shrink(width, height)
+  def scale_to_fit(width, height)
     @image.change_geometry("#{width}x#{height}") { |cols, height, img| img.resize!(cols, height) }
     self
   end
@@ -70,6 +52,22 @@ class RmagickProcessor
   
   def caption
     @image[:Caption]
+  end
+  
+protected
+  
+  def load_image
+    color = @color
+    if @path
+      Magick::Image.read(File.expand_path(@path)).first
+    elsif @width && @height
+      Magick::Image.new(@width, @height) do
+        self.depth = 8
+        self.background_color = color if color
+      end
+    else
+      raise ArgumentError, "Expected either a path or a width and height"
+    end
   end
   
 end
