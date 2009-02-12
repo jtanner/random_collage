@@ -7,6 +7,10 @@ end
 #   @processer:  An instance of the image at ruby_image_path()
 describe 'an image processor', :shared => true do
   
+  before(:each) do
+    @test_path = spec_dir + '/test.jpg'
+  end
+  
   %w[
     image
     color
@@ -63,7 +67,9 @@ describe 'an image processor', :shared => true do
   end
   
   it "should scale_to_fit" do
-    img = @processor.scale_to_fit(300,200)
+    img = @processor.class.new(:path => "/Users/jtanner/Pictures/iPhoto Library/Originals/2008/Green River with Tanner Family/P6201858.JPG")
+    img.scale_to_fit(489, 367)
+    img.save(@test_path)
     img.width.should  == 267
     img.height.should == 200
   end
@@ -71,34 +77,33 @@ describe 'an image processor', :shared => true do
   it "should do a polaroid effect" do
     width  = @ruby_image.width
     height = @ruby_image.height
-    lambda { @ruby_image.polaroid }.should_not raise_error
     img = @ruby_image.polaroid(20)
     img.width.should  > width
     img.height.should > height
   end
   
   it "should save (a red square) to disk" do
-    test_path = spec_dir + '/test.jpg'
-    FileUtils.rm_f(test_path)
     img = @processor.class.new(:width => 50, :height => 50, :color => 'red')
-    img.save(test_path)
-    saved = @processor.class.new(:path => test_path)
+    img.save(@test_path)
+    saved = @processor.class.new(:path => @test_path)
     saved.width.should  == img.width
     saved.height.should == img.height
   end
   
   it "should save a resized ruby.jpg to disk" do
-    test_path = spec_dir + '/test.jpg'
-    FileUtils.rm_f(test_path)
     img = @processor.class.new(:path => ruby_image_path)
     img.crop_to_fit(75, 50)
-    img.save(test_path)
-    saved = @processor.class.new(:path => test_path)
+    img.save(@test_path)
+    saved = @processor.class.new(:path => @test_path)
     saved.width.should  == 75
     saved.height.should == 50
   end
   
-  it "should add a border"
+  it "should add a border" do
+    @ruby_image.border(10, 'darkslategray')
+    @ruby_image.width.should  == 120
+    @ruby_image.height.should == 120
+  end
   
   it "should add a caption" do
     @ruby_image.caption = "Ruby!"

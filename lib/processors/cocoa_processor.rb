@@ -27,27 +27,13 @@ class CocoaProcessor < ImageProcessor
   def composite(other_image, x, y)
     other_image = other_image.image if other_image.is_a?(ImageProcessor)
     @image.lockFocus
-    other_image.drawAtPoint_fromRect_operation_fraction([x,y], [0,0,800,800], OSX::NSCompositeSourceOver, 1.0)
+    other_image.drawAtPoint_fromRect_operation_fraction([x,y], [0,0, other_image.size.width, other_image.size.height], OSX::NSCompositeSourceOver, 1.0)
     @image.unlockFocus
     self
   end
   
   # resizes and crops to fill bounds
   def crop_to_fit(width, height)
-    # create_core_image_context(width, height)
-    # scale_x, scale_y = scaling(width, height)
-    # ciimage = OSX::CIImage.alloc.initWithData(@image.TIFFRepresentation)
-    # resized_image = nil
-    # ciimage.affine_clamp :inputTransform => OSX::NSAffineTransform.transform do |clamped|
-    #   clamped.lanczos_scale_transform :inputScale => scale_x > scale_y ? scale_x : scale_y, :inputAspectRatio => scale_x / scale_y do |scaled|
-    #     scaled.crop :inputRectangle => vector(0, 0, width, height) do |cropped|
-    #       resized_image = cropped
-    #     end
-    #   end
-    # end
-    # @image = OSX::NSImage.alloc.initWithSize([resized_image.extent.size.width, resized_image.extent.size.height])
-    # composite(resized_image, 0, 0)
-    
     @image = @image.crop_to_fit(width, height)
     self
   end
@@ -59,10 +45,21 @@ class CocoaProcessor < ImageProcessor
   end
   
   def polaroid(angle = -5.0)
-    @image = @image.polaroid(angle) do
-      self.shadow_color = "darkslategray"
-      self.pointsize = 12
-    end
+    border(15)
+    @image = @image.polaroid(angle)
+    self
+  end
+  
+  def border(border_width, color=nil)
+    new_width  = self.width  + (border_width * 2)
+    new_height = self.height + (border_width * 2)
+    result = OSX::NSImage.alloc.initWithSize([new_width, new_height])
+    result.lockFocus
+    OSX::NSColor.color_with_name('#f0f0ff').set
+    OSX::NSRectFill([0, 0, new_width, new_height])
+    @image.drawInRect_fromRect_operation_fraction([border_width, border_width, self.width, self.height], [0, 0, self.width, self.height], OSX::NSCompositeSourceOver, 1.0)
+    result.unlockFocus
+    @image = result
     self
   end
   
@@ -95,23 +92,6 @@ protected
     else
       raise ArgumentError, "Expected either a path or a width and height"
     end
-  end
-  
-private
-
-  def create_core_image_context(width, height)
-    output = OSX::NSBitmapImageRep.alloc.initWithBitmapDataPlanes_pixelsWide_pixelsHigh_bitsPerSample_samplesPerPixel_hasAlpha_isPlanar_colorSpaceName_bytesPerRow_bitsPerPixel(nil, width, height, 8, 4, true, false, OSX::NSDeviceRGBColorSpace, 0, 0)
-    context = OSX::NSGraphicsContext.graphicsContextWithBitmapImageRep(output)
-    OSX::NSGraphicsContext.setCurrentContext(context)
-    @ci_context = context.CIContext
-  end
-  
-  def vector(x, y, w, h)
-    OSX::CIVector.vectorWithX_Y_Z_W(x, y, w, h)
-  end
-  
-  def scaling(width, height)
-    [width.to_f / self.width.to_f, height.to_f / self.height.to_f]
   end
   
 end

@@ -40,6 +40,48 @@ end
 
 class OSX::NSImage
   
+  def polaroid(angle = -5.0)
+    width, height = rotated_rectangle_bounds(angle)
+    xform = OSX::NSAffineTransform.transform
+    result = OSX::NSImage.alloc.initWithSize([width, height])
+    result.lockFocus
+    OSX::NSGraphicsContext.currentContext.setImageInterpolation(OSX::NSImageInterpolationHigh)
+    OSX::CGContextTranslateCTM(OSX::NSGraphicsContext.currentContext.graphicsPort, width/2, height/2) # Move the origin to the center.
+    xform.rotateByDegrees(-angle)
+    xform.concat
+    dest_rect   = [0 - (size.width/2.0), 0 - (size.height/2.0), size.width, size.height]
+    source_rect = [0, 0, size.width, size.height]
+    drawInRect_fromRect_operation_fraction(dest_rect, source_rect, OSX::NSCompositeSourceOver, 1.0)
+    result.unlockFocus
+    result
+  end
+  
+  # Thanks to http://www.codeproject.com/KB/graphics/rotateimage.aspx
+  def rotated_rectangle_bounds(angle)
+    pi2 = Math::PI / 2.0
+    theta = angle * Math::PI / 180.0
+    while theta < 0.0
+      theta += 2 * Math::PI
+    end
+    
+    adjacent_method, opposite_method, top_method, bottom_method = 
+      if (theta >= 0.0 && theta < pi2) || (theta >= Math::PI && theta < (Math::PI + pi2) )
+        [:cos, :sin, :width, :height]
+      else
+        [:sin, :cos, :height, :width]
+      end
+    adjacent_top    = Math.send(adjacent_method, theta).abs * size.send(top_method)
+    opposite_top    = Math.send(opposite_method, theta).abs * size.send(top_method)
+    adjacent_bottom = Math.send(adjacent_method, theta).abs * size.send(bottom_method)
+    opposite_bottom = Math.send(opposite_method, theta).abs * size.send(bottom_method)
+    
+    width  = adjacent_top + opposite_bottom
+    height = adjacent_bottom + opposite_top
+    
+    [width.ceil + 1, height.ceil + 1]
+  end
+  
+  
   def crop_to_fit(width, height)
     resize(width, height, :resize_crop)
   end

@@ -26,7 +26,7 @@ class RandomCollage
     @options = {}
     DEFAULTS.each { |k,v| @options[k] = options[k] || v }
     
-    @options[:processor] = RmagickProcessor
+    @options[:processor] = CocoaProcessor # RmagickProcessor
   end
   
   def save
