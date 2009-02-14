@@ -3,12 +3,10 @@ require File.join(File.dirname(__FILE__), 'cocoa_extras.rb')
 class CocoaProcessor < ImageProcessor
   
   def width
-    # @image.extent.size.width CIImage
     @image.size.width
   end
   
   def height
-    # @image.extent.size.height CIImage
     @image.size.height
   end
   

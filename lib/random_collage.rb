@@ -14,6 +14,7 @@ class RandomCollage
     :input_dir        => nil,
     :output_dir       => '~/Pictures/collages',
     :collages_to_keep => 20,
+    :processor        => 'Cocoa',
     :using_iphoto     => false,
     :from             => nil,
     :to               => nil,
@@ -26,7 +27,12 @@ class RandomCollage
     @options = {}
     DEFAULTS.each { |k,v| @options[k] = options[k] || v }
     
-    @options[:processor] = CocoaProcessor # RmagickProcessor
+    begin
+      @options[:processor] = "#{@options[:processor]}Processor".constantize
+    rescue NameError
+      puts "Processor not found by the name of #{@options[:processor]}"
+      exit(1)
+    end
   end
   
   def save
