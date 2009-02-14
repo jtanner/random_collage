@@ -67,9 +67,7 @@ describe 'an image processor', :shared => true do
   end
   
   it "should scale_to_fit" do
-    img = @processor.class.new(:path => "/Users/jtanner/Pictures/iPhoto Library/Originals/2008/Green River with Tanner Family/P6201858.JPG")
-    img.scale_to_fit(489, 367)
-    img.save(@test_path)
+    img = @processor.scale_to_fit(300,200)
     img.width.should  == 267
     img.height.should == 200
   end
@@ -97,12 +95,6 @@ describe 'an image processor', :shared => true do
     saved = @processor.class.new(:path => @test_path)
     saved.width.should  == 75
     saved.height.should == 50
-  end
-  
-  it "should add a border" do
-    @ruby_image.border(10, 'darkslategray')
-    @ruby_image.width.should  == 120
-    @ruby_image.height.should == 120
   end
   
   it "should add a caption" do

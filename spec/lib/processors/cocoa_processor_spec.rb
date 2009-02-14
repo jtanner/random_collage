@@ -11,3 +11,5 @@ describe CocoaProcessor do
   it_should_behave_like 'an image processor'
   
 end
+
+# ./random_collage -u -o ~/Pictures/collages/test/ -n 5 && open ~/Pictures/collages/test

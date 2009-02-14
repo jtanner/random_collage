@@ -15,7 +15,7 @@ class OSX::NSColor
     elsif name == "grey"
       OSX::NSColor.colorWithDeviceRed_green_blue_alpha(0.5,0.5,0.5,1)
     else
-      eval "OSX::NSColor.#{name}Color"
+      OSX::NSColor.send("#{name}Color")
     end
   end
 end
@@ -40,45 +40,96 @@ end
 
 class OSX::NSImage
   
-  def polaroid(angle = -5.0)
-    width, height = rotated_rectangle_bounds(angle)
-    xform = OSX::NSAffineTransform.transform
-    result = OSX::NSImage.alloc.initWithSize([width, height])
+  def polaroid(angle = -5.0, caption = nil)
+    border_width                = 12
+    bordered_image              = border(12, '#f0f0ff', caption)
+    shadow_width, shadow_radius = 5.0, 2.5
+    old_width, old_height       = bordered_image.size.width, bordered_image.size.height
+    width, height               = rotated_rectangle_bounds(angle, old_width, old_height).map { |l| l + shadow_width + shadow_radius }
+    xform                       = OSX::NSAffineTransform.transform
+    result                      = OSX::NSImage.alloc.initWithSize([width, height])
     result.lockFocus
     OSX::NSGraphicsContext.currentContext.setImageInterpolation(OSX::NSImageInterpolationHigh)
     OSX::CGContextTranslateCTM(OSX::NSGraphicsContext.currentContext.graphicsPort, width/2, height/2) # Move the origin to the center.
     xform.rotateByDegrees(-angle)
     xform.concat
-    dest_rect   = [0 - (size.width/2.0), 0 - (size.height/2.0), size.width, size.height]
-    source_rect = [0, 0, size.width, size.height]
-    drawInRect_fromRect_operation_fraction(dest_rect, source_rect, OSX::NSCompositeSourceOver, 1.0)
+    dest_rect   = [0 - (old_width/2.0), 0 - (old_height/2.0), old_width, old_height]
+    source_rect = [0, 0, old_width, old_height]
+    shadow([shadow_width, -shadow_width], shadow_radius) do
+      bordered_image.drawInRect_fromRect_operation_fraction(dest_rect, source_rect, OSX::NSCompositeSourceOver, 1.0)
+    end
+    polaroid_text(caption, border_width + 1, -(old_width/2) + border_width, -(old_height/2) + border_width)
     result.unlockFocus
     result
   end
   
-  # Thanks to http://www.codeproject.com/KB/graphics/rotateimage.aspx
-  def rotated_rectangle_bounds(angle)
+  def polaroid_text(text, size, x, y)
+    ctx = OSX::NSGraphicsContext.currentContext.graphicsPort
+    OSX::CGContextSelectFont(ctx, "GillSans", size, OSX::KCGEncodingMacRoman)
+    OSX::CGContextSetTextDrawingMode(ctx, OSX::KCGTextFillStroke)
+    OSX::CGContextSetRGBFillColor(ctx, 0.1, 0.1, 0.1, 0.7)
+    OSX::CGContextSetRGBStrokeColor(ctx, 0.1, 0.1, 0.1, 0.5)
+    OSX::CGContextShowTextAtPoint(ctx, x, y, text, text.size)
+  end
+  
+  # Thanks to http:#www.codeproject.com/KB/graphics/rotateimage.aspx
+  def rotated_rectangle_bounds(angle, width, height)
     pi2 = Math::PI / 2.0
     theta = angle * Math::PI / 180.0
     while theta < 0.0
       theta += 2 * Math::PI
     end
     
-    adjacent_method, opposite_method, top_method, bottom_method = 
+    adjacent_method, opposite_method, top, bottom = 
       if (theta >= 0.0 && theta < pi2) || (theta >= Math::PI && theta < (Math::PI + pi2) )
-        [:cos, :sin, :width, :height]
+        [:cos, :sin, width, height]
       else
-        [:sin, :cos, :height, :width]
+        [:sin, :cos, height, width]
       end
-    adjacent_top    = Math.send(adjacent_method, theta).abs * size.send(top_method)
-    opposite_top    = Math.send(opposite_method, theta).abs * size.send(top_method)
-    adjacent_bottom = Math.send(adjacent_method, theta).abs * size.send(bottom_method)
-    opposite_bottom = Math.send(opposite_method, theta).abs * size.send(bottom_method)
+    adjacent_top    = Math.send(adjacent_method, theta).abs * top
+    opposite_top    = Math.send(opposite_method, theta).abs * top
+    adjacent_bottom = Math.send(adjacent_method, theta).abs * bottom
+    opposite_bottom = Math.send(opposite_method, theta).abs * bottom
     
     width  = adjacent_top + opposite_bottom
     height = adjacent_bottom + opposite_top
     
     [width.ceil + 1, height.ceil + 1]
+  end
+  
+  def shadow(offset_size, blur_radius, alpha = 0.4, &block)
+    OSX::NSGraphicsContext.saveGraphicsState
+    
+    # Create the shadow below and to the right of the shape.
+    theShadow = OSX::NSShadow.alloc.init
+    theShadow.setShadowOffset(offset_size)
+    theShadow.setShadowBlurRadius(blur_radius)
+    
+    # Use a partially transparent color for shapes that overlap.
+    theShadow.setShadowColor(OSX::NSColor.blackColor.colorWithAlphaComponent(alpha))
+    
+    theShadow.set
+    
+    # Draw your custom content here. Anything you draw
+    # automatically has the shadow effect applied to it.
+    yield
+    
+    OSX::NSGraphicsContext.restoreGraphicsState
+  end
+  
+  def border(border_width, color = nil, caption_space = false)
+    new_width  = size.width  + (border_width * 2)
+    new_height = size.height + (border_width * 2)
+    new_height += border_width * 2 if caption_space
+    result = OSX::NSImage.alloc.initWithSize([new_width, new_height])
+    result.lockFocus
+    OSX::NSColor.color_with_name(color).set
+    OSX::NSRectFill([0, 0, new_width, new_height])
+    y = border_width
+    y += border_width * 2 if caption_space
+    drawInRect_fromRect_operation_fraction([border_width, y, size.width, size.height], [0, 0, size.width, size.height], OSX::NSCompositeSourceOver, 1.0)
+    result.unlockFocus
+    result
   end
   
   

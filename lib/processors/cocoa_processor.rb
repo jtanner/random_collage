@@ -45,34 +45,25 @@ class CocoaProcessor < ImageProcessor
   end
   
   def polaroid(angle = -5.0)
-    border(15)
-    @image = @image.polaroid(angle)
+    @image = @image.polaroid(angle, caption)
     self
   end
   
-  def border(border_width, color=nil)
-    new_width  = self.width  + (border_width * 2)
-    new_height = self.height + (border_width * 2)
-    result = OSX::NSImage.alloc.initWithSize([new_width, new_height])
-    result.lockFocus
-    OSX::NSColor.color_with_name('#f0f0ff').set
-    OSX::NSRectFill([0, 0, new_width, new_height])
-    @image.drawInRect_fromRect_operation_fraction([border_width, border_width, self.width, self.height], [0, 0, self.width, self.height], OSX::NSCompositeSourceOver, 1.0)
-    result.unlockFocus
-    @image = result
+  def border(border_width, color = nil)
+    @image = @image.border(border_width, color)
     self
   end
   
   def filename
-    raise
+    @path
   end
   
   def caption=(text)
-    raise
+    @caption = text
   end
   
   def caption
-    raise
+    @caption
   end
   
 protected
