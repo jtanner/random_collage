@@ -21,7 +21,7 @@ EOS
   opt :background,       "Give a color name from http://www.w3.org/TR/SVG/types.html#ColorKeywords, or 'transparent', or 'photo' to use one of the photos.", :default => 'black'
   opt :show_titles,      "Show titles on the polaroid border (uses a titleized version of the file name)", :default => false
   opt :collages_to_keep, "Number of images to keep in the --output-dir (use 'all' to keep all files)", :default => 20
-  opt :processor,        "Options are 'Cocoa' or 'Rmagick'", :default => 'Cocoa', :short => 'z'
+  opt :processor,        "Options are 'Cocoa' or 'Rmagick'", :default => 'Rmagick', :short => 'z'
   banner "\niPhoto [options] are:"
   opt :using_iphoto,     "To use an iPhoto Library then use this flag (if your library is in a non-standard location then --input_dir must be used)", :default => false
   opt :from,             "Date 'yyyy-mm-dd' or Time 'yyyy-mm-dd hh:mm:ss' can be used without --to", :type => String
