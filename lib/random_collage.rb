@@ -73,12 +73,12 @@ private
     if @options[:background] == 'photo'
       @photo_background = photos.pop.crop_to_fit(@options[:width], @options[:height])
       @options[:number_of_photos] -= 1
-      @options[:background] = 'none'
+      @options[:background] = 'transparent'
     end
     @photo_background
   end
   
-  # background_color = 'none' for a blank PNG
+  # background_color = 'transparent' for a blank PNG
   def background
     return @background if @background
     photo_background # modifies the background option
